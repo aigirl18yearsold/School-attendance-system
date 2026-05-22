@@ -1,0 +1,164 @@
+def add_exam_result():
+
+    student_id = input("Enter Student ID: ")
+
+    subject = input("Enter Subject: ")
+
+    marks = float(input("Enter Obtained Marks: "))
+
+    total_marks = float(input("Enter Total Marks: "))
+
+    exam_month = input("Enter Exam Month (Example: 2026-05): ")
+
+
+    cursor.execute("""
+    INSERT INTO exams
+    (student_id, subject, marks, total_marks, exam_month)
+    VALUES (?, ?, ?, ?, ?)
+    """, (student_id, subject, marks, total_marks, exam_month))
+
+
+    connection.commit()
+
+    print("Exam Result Added Successfully")
+  def performance_report():
+
+    student_id = input("Enter Student ID: ")
+
+    month = input("Enter Exam Month (Example: 2026-05): ")
+
+
+    cursor.execute("""
+    SELECT subject, marks, total_marks
+    FROM exams
+    WHERE student_id = ?
+    AND exam_month = ?
+    """, (student_id, month))
+
+
+    records = cursor.fetchall()
+
+
+    total_obtained = 0
+    total_possible = 0
+
+
+    print("
+===== PERFORMANCE REPORT =====")
+
+
+    for record in records:
+
+        subject = record[0]
+        marks = record[1]
+        total_marks = record[2]
+
+        percentage = (marks / total_marks) * 100
+
+        print(subject)
+        print("Marks:", marks, "/", total_marks)
+        print("Percentage:", round(percentage, 2), "%")
+
+
+        if percentage >= 40:
+            print("Status: PASS")
+
+        else:
+            print("Status: FAIL")
+
+
+        print("----------------------")
+
+
+        total_obtained += marks
+        total_possible += total_marks
+
+
+    if total_possible > 0:
+
+        overall = (total_obtained / total_possible) * 100
+
+        print("Overall Percentage:", round(overall, 2), "%")
+
+
+        if overall >= 80:
+            print("Grade: A+")
+
+        elif overall >= 70:
+            print("Grade: A")
+
+        elif overall >= 60:
+            print("Grade: A-")
+
+        elif overall >= 50:
+            print("Grade: B")
+
+        elif overall >= 40:
+            print("Grade: C")
+
+        else:
+            print("Grade: FAIL")
+          students.name
+      def top_students():
+
+    month = input("Enter Exam Month (Example: 2026-05): ")
+
+
+    cursor.execute("""
+    SELECT students.name,
+           SUM(exams.marks) as total_marks,
+           SUM(exams.total_marks) as total_possible
+
+    FROM exams
+
+    JOIN students
+    ON exams.student_id = students.id
+
+    WHERE exams.exam_month = ?
+
+    GROUP BY students.name
+
+    ORDER BY total_marks DESC
+    """, (month,))
+
+
+    records = cursor.fetchall()
+
+
+    print("
+===== TOP STUDENTS =====")
+
+
+    rank = 1
+
+
+    for record in records:
+
+        name = record[0]
+        obtained = record[1]
+        total = record[2]
+
+        percentage = (obtained / total) * 100
+
+        print(f"{rank}. {name} - {round(percentage,2)}%")
+
+        rank += 1
+      print("6. Add Exam Result")
+print("7. Performance Report")
+print("8. Top Students")
+print("9. Exit")
+elif choice == "6":
+
+    add_exam_result()
+
+
+elif choice == "7":
+
+    performance_report()
+
+
+elif choice == "8":
+
+    top_students()
+
+  
