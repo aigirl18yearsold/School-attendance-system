@@ -1,0 +1,31 @@
+cursor.execute("""
+CREATE TABLE IF NOT EXISTS students (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    name TEXT,
+    grade TEXT
+)
+""")
+cursor.execute("""
+CREATE TABLE IF NOT EXISTS exams (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    student_id INTEGER,
+    subject TEXT,
+    marks REAL,
+    total_marks REAL,
+    exam_month TEXT
+)
+""")
+def add_student():
+
+    name = input("Enter Student Name: ")
+
+    grade = input("Enter Grade/Class: ")
+
+    cursor.execute(
+        "INSERT INTO students (name, grade) VALUES (?, ?)",
+        (name, grade)
+    )
+
+    connection.commit()
+
+    print("Student Added Successfully")
